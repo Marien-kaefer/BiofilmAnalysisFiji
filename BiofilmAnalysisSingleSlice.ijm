@@ -19,8 +19,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #@ String (label = "File suffix", value = ".tif", persist=false) suffix
 #@ boolean overlay (label = "Save overlay?") 
 
-//setBatchMode(true);
-
 processFolder(input);
 
 beep();
@@ -172,17 +170,17 @@ function intensity_measurement(){
 	// process channel one, generate ROIs and combine them and then measure the parameters of the combined area, write results to file
 	selectWindow("live"); 
 	run("Analyze Particles...", "clear add");
-	roiManager("save", output + File.separator + file_name_without_extension + "-live-cells-test.zip" );
+	//roiManager("save", output + File.separator + file_name_without_extension + "-live-cells.zip" );
 	roiManager("Select All"); 
 	roiManager("Combine"); 
 	roiManager("Add"); 
 	nROIs = roiManager("count");
 	roiManager("Select", (nROIs-1));
-	roiManager("save", output + File.separator + file_name_without_extension + "-live-cells-test.roi" );
+	//roiManager("save", output + File.separator + file_name_without_extension + "-live-cells.roi" );
 	selectWindow(title);
 	setSlice(1);
 	roiManager("multi-measure");
-	results_filename = file_name_without_extension + "_C1-results.txt"; 
+	results_filename = file_name_without_extension + "_live-results.txt"; 
 	saveAs("Results", output + File.separator + results_filename);
 
 	//generate overlay image if selected
@@ -215,7 +213,7 @@ function intensity_measurement(){
 	selectWindow(title); 
 	setSlice(2);
 	roiManager("multi-measure");
-	results_filename = file_name_without_extension + "_C2-results.txt"; 
+	results_filename = file_name_without_extension + "_dead-results.txt"; 
 	saveAs("Results", output + File.separator + results_filename);
 
 	//generate overlay image if selected
