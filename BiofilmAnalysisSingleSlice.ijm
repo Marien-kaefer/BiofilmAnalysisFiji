@@ -95,9 +95,8 @@ function preprocessing(){
 	Red and green channel smoothing */
 	selectWindow(channel_title[0]);
 	run("Median...", "radius=2.5");
-	
 	selectWindow(channel_title[1]);
-	run("Median...", "radius=2.5");
+	run("Median...", "radius=2.5");	
 
 }
 
@@ -110,6 +109,11 @@ function segmentation(){
 	setAutoThreshold("Otsu dark");
 	//run("Threshold...");
 	run("Convert to Mask");
+		setOption("BlackBackground", false);
+	run("Erode");
+	run("Erode");
+	run("Dilate");
+	run("Dilate");
 	// uncomment next line to save mask for troubleshooting
 	//save(output + File.separator + channel_title[0] + "-mask.tif");
 	
@@ -118,6 +122,11 @@ function segmentation(){
 	setAutoThreshold("Otsu dark");
 	//run("Threshold...");
 	run("Convert to Mask");		
+	setOption("BlackBackground", false);
+	run("Erode");
+	run("Erode");
+	run("Dilate");
+	run("Dilate");
 	// uncomment next line to save mask for troubleshooting
 	//save(output + File.separator + channel_title[1] + "-mask.tif");
 
