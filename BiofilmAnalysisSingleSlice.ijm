@@ -40,7 +40,8 @@ function processFolder(input) {
 function processFile(input, output, file,i,list) {
 	open(input + File.separator + file);
 	file_name_without_extension = file_name_remove_extension(file);
-	print("Processing file " + i + "/" + list.length + " -->"  + file);
+	getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec); 
+	print(year + "-" + (month+1)+"-" + dayOfMonth + " " + hour + ":" + minute + ":" + second + ":  Processing file " + i + "/" + list.length + " -->"  + file);
 	
 	//check whether the image is a z stack. If so,  create Maximum intensity projection
 	getDimensions(width, height, channels, slices, frames);
@@ -109,7 +110,6 @@ function segmentation(){
 	setAutoThreshold("Otsu dark");
 	//run("Threshold...");
 	run("Convert to Mask");
-		setOption("BlackBackground", false);
 	run("Erode");
 	run("Erode");
 	run("Dilate");
@@ -122,7 +122,6 @@ function segmentation(){
 	setAutoThreshold("Otsu dark");
 	//run("Threshold...");
 	run("Convert to Mask");		
-	setOption("BlackBackground", false);
 	run("Erode");
 	run("Erode");
 	run("Dilate");
@@ -167,7 +166,7 @@ function area_measurement(){
 	selectWindow("live");
 	run("Measure"); 
 
-	results_filename = file_name_without_extension + "_area-results.txt"; 
+	results_filename = file_name_without_extension + "_area-results.csv"; 
 	saveAs("Results", output + File.separator + results_filename);
 }
 
@@ -185,11 +184,12 @@ function intensity_measurement(){
 	roiManager("Add"); 
 	nROIs = roiManager("count");
 	roiManager("Select", (nROIs-1));
-	//roiManager("save", output + File.separator + file_name_without_extension + "-live-cells.roi" );
+	roiManager("save", output + File.separator + file_name_without_extension + "-live-cells.roi" );
 	selectWindow(title);
 	setSlice(1);
+	roiManager("Select", (nROIs-1));
 	roiManager("multi-measure");
-	results_filename = file_name_without_extension + "_live-results.txt"; 
+	results_filename = file_name_without_extension + "_live-results.csv"; 
 	saveAs("Results", output + File.separator + results_filename);
 
 	//generate overlay image if selected
@@ -212,17 +212,18 @@ function intensity_measurement(){
 	roiManager("Delete");
 	selectWindow(channel_title[1]); 
 	run("Analyze Particles...", "clear add");
+	//roiManager("save", output + File.separator + file_name_without_extension + "-dead-cells.zip" );
 	roiManager("Select All"); 
 	roiManager("Combine"); 
 	roiManager("Add"); 
-	nROIs = roiManager("count");
+	nROIs = roiManager("count");
 	roiManager("Select", (nROIs-1));
-
-	
+	roiManager("save", output + File.separator + file_name_without_extension + "-dead-cells.roi" );
 	selectWindow(title); 
 	setSlice(2);
+	roiManager("Select", (nROIs-1));
 	roiManager("multi-measure");
-	results_filename = file_name_without_extension + "_dead-results.txt"; 
+	results_filename = file_name_without_extension + "_dead-results.csv"; 
 	saveAs("Results", output + File.separator + results_filename);
 
 	//generate overlay image if selected
